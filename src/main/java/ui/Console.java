@@ -29,8 +29,8 @@ public class Console {
 
             String line = br.readLine();
 
-            switch (line){
-                case "1":
+            switch (line.charAt(0)){
+                case '1':
                     String registrationNumber, name;
                     int group;
                     System.out.print("\nStudent Registration number: ");
@@ -59,7 +59,7 @@ public class Console {
 
                     break;
 
-                case "2":
+                case '2':
                     int number, problemNumber;
                     String date, studentRegNumber;
 
@@ -98,7 +98,7 @@ public class Console {
 
                     break;
 
-                case "3":
+                case '3':
                     String labNumber;
                     float grade;
                     System.out.println("\nStudent Reg number: ");
@@ -118,13 +118,19 @@ public class Console {
                         if (!success) {
                             System.out.println("Cannot save grade\n");
                         }
-                    } catch (NumberFormatException|IOException|ParseException e) {
+                    } catch (NumberFormatException e) {
+                        System.out.println("Cannot save grade\n");
+                    }
+                    catch (IOException e) {
+                        System.out.println("Cannot save grade\n");
+                    }
+                    catch (ParseException e) {
                         System.out.println("Cannot save grade\n");
                     }
 
                     break;
 
-                case "4":
+                case '4':
                     try {
                         List<Student> passingStudents = laboratoryController.passedStudents("students.txt");
                         System.out.println("\nPassing students: ");

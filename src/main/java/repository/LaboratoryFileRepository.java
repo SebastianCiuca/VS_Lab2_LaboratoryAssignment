@@ -125,11 +125,11 @@ public class LaboratoryFileRepository implements Repository<Long, Laboratory> {
     }
 
     public boolean findOne(Laboratory laboratory) throws IOException, ParseException {
-        boolean found = true;
+        boolean found = false;
 
         for (Object l : findAll()){
             if (((Laboratory) l).getStudentRegNumber() == laboratory.getStudentRegNumber())
-                return false;
+                return true;
         }
 
         return found;

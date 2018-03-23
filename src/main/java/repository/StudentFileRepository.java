@@ -64,11 +64,11 @@ public class StudentFileRepository implements Repository<Long, Student> {
     }
 
     public boolean findOne(Student student) throws IOException, ParseException {
-        boolean found = true;
+        boolean found = false;
 
         for (Object l : findAll()){
             if (((Student) l).getRegNumber() == student.getRegNumber())
-                return false;
+                return true;
         }
 
         return found;
