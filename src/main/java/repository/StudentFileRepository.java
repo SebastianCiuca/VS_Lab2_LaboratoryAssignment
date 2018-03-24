@@ -54,7 +54,7 @@ public class StudentFileRepository implements Repository<Long, Student> {
 
         String line = null;
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null && !line.isEmpty()) {
             String[] temp = line.split(" ");
             Student student = new Student(temp[0], temp[1] + " " +  temp[2], Integer.valueOf(temp[3]));
             allStudentsList.add(student);

@@ -5,6 +5,8 @@ import org.junit.Test;
 import repository.LaboratoryFileRepository;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -53,5 +55,22 @@ public class LaboratoryControllerTest {
         */
 
         assertFalse(laboratoryController.saveLaboratory(testLab));
+    }
+
+    @Test
+    public void passedStudents() throws IOException, ParseException {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        File f2 = new File("StudentControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository(f.getName())
+        );
+
+        assertTrue(!laboratoryController.passedStudents(f2.getName()).isEmpty());
+        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 1);
+
     }
 }
