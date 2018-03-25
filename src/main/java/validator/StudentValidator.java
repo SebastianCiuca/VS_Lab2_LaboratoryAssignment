@@ -12,7 +12,7 @@ public class StudentValidator implements Validator<Student> {
         if (!student.getName().matches("[a-zA-Z]+[\\s][a-zA-Z]+")) {
             return false;
         }
-        if(student.getGroup() >= 1000 || student.getGroup() <= 0){
+        if(student.getGroup() >= 1000 || student.getGroup() <= 99){
             return false;
         }
         return true;

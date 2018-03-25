@@ -27,9 +27,15 @@ public class StudentControllerTest {
 
     @Test
     public void saveStudent() throws IOException, ParseException {
-        Student validS = new Student("bwie1000","Brie Wanaschow",933);
+        Student validS1 = new Student("bwie1000","Brie Wanaschow",933);
+        Student validS2 = new Student("bwie1000","Brie Wanaschow",999);
+        Student validS3 = new Student("bwie1000","Brie Wanaschow",100);
         Student invalidS1 = new Student("bwie10002","Brie Wanaschow",101);
         Student invalidS2 = new Student("bwie1000","Brie Wanaschow",1000);
+        Student invalidS3 = new Student("bwie1000","Brie Wanaschow",10);
+        Student invalidS4 = new Student("bw1000","Brie Wanaschow",109);
+        Student invalidS5 = new Student("bwiee1000","Brie Wanaschow",102);
+        Student invalidS6 = new Student("bwie99","Brie Wanaschow",101);
 
 
         File f = new File("StudentControllerTestFile.txt");
@@ -39,9 +45,16 @@ public class StudentControllerTest {
                 new StudentFileRepository(f.getName())
         );
 
-        assertTrue(studentController.saveStudent(validS));
+        assertTrue(studentController.saveStudent(validS1));
+        assertTrue(studentController.saveStudent(validS2));
+        assertTrue(studentController.saveStudent(validS3));
         assertFalse(studentController.saveStudent(invalidS1));
         assertFalse(studentController.saveStudent(invalidS2));
+        assertFalse(studentController.saveStudent(invalidS2));
+        assertFalse(studentController.saveStudent(invalidS3));
+        assertFalse(studentController.saveStudent(invalidS4));
+        assertFalse(studentController.saveStudent(invalidS5));
+        assertFalse(studentController.saveStudent(invalidS6));
     }
 
 }
