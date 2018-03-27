@@ -36,11 +36,14 @@ public class LaboratoryController {
 
     public boolean addGrade(String student, Long labNumber, float grade)
             throws NumberFormatException, IOException, ParseException {
+        boolean wasAdded;
         if (LaboratoryValidator.validateGrade(grade)) {
-            return this.laboratoryRepository.addGrade(student, labNumber, grade);
+            wasAdded = this.laboratoryRepository.addGrade(student, labNumber, grade);
         } else {
-            return false;
+            wasAdded = false;
         }
+
+        return wasAdded;
     }
 
     /**

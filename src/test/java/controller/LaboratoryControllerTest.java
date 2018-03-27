@@ -121,6 +121,21 @@ public class LaboratoryControllerTest {
     }
 
     @Test
+    public void addGrade_invalidLab_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+
+        Laboratory newLab = new Laboratory(5,"1/1/2019",5,"amie1000");
+        laboratoryController.saveLaboratory(newLab);
+
+        assertFalse(laboratoryController.addGrade("amie1000",-2l,9));
+    }
+
+    @Test
     public void saveLaboratory_valid_WBT() throws Exception {
         File f = new File("LaboratoryControllerTestFile.txt");
         assertTrue(f.exists());
