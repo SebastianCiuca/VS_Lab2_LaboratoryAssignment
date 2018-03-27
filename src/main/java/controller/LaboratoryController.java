@@ -20,14 +20,18 @@ public class LaboratoryController {
     }
 
     public boolean saveLaboratory(Laboratory laboratory) throws IOException, ParseException {
+        boolean isSaved;
         if (laboratoryValidator.validate(laboratory)) {
             if(laboratoryRepository.findOne(laboratory))
-                return false;
-            this.laboratoryRepository.save(laboratory);
-            return true;
+                isSaved = false;
+            else {
+                this.laboratoryRepository.save(laboratory);
+                isSaved = true;
+            }
         } else {
-            return false;
+            isSaved = false;
         }
+        return isSaved;
     }
 
     public boolean addGrade(String student, Long labNumber, float grade)

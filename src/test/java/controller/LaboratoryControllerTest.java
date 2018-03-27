@@ -1,17 +1,30 @@
 package controller;
 
 import domain.Laboratory;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import repository.LaboratoryFileRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
 public class LaboratoryControllerTest {
+
+    @BeforeClass
+    public static void setup() throws FileNotFoundException {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        PrintWriter pw = new PrintWriter(f.getName());
+    }
+
+    /*
+        Black box tests
+     */
 
     @Test
     public void addGrade() throws Exception {
@@ -46,7 +59,7 @@ public class LaboratoryControllerTest {
         LaboratoryController laboratoryController = new LaboratoryController(
                 new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
         );
-        Laboratory testLab = new Laboratory(1,"01/01/2019",2,"brie1000");
+        Laboratory testLab = new Laboratory(1,"01/01/2019",2,"bxie1000");
         assertTrue(laboratoryController.saveLaboratory(testLab));
         testLab.setLabNumber(-1);
 
@@ -59,10 +72,10 @@ public class LaboratoryControllerTest {
 
     @Test
     public void passedStudents() throws IOException, ParseException {
-        File f = new File("LaboratoryControllerTestFile.txt");
+        File f = new File("LaboratoryControllerTestFilePassedStudents.txt");
         assertTrue(f.exists());
 
-        File f2 = new File("StudentControllerTestFile.txt");
+        File f2 = new File("StudentControllerTestFilePassedStudents.txt");
         assertTrue(f.exists());
 
         LaboratoryController laboratoryController = new LaboratoryController(
@@ -70,7 +83,89 @@ public class LaboratoryControllerTest {
         );
 
         assertTrue(!laboratoryController.passedStudents(f2.getName()).isEmpty());
-        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 1);
+        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 3);
+    }
 
+    /*
+        White box tests
+     */
+
+    @Test
+    public void addGrade_valid_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+
+        Laboratory newLab = new Laboratory(5,"1/1/2019",5,"amie1000");
+        laboratoryController.saveLaboratory(newLab);
+
+        assertTrue(laboratoryController.addGrade("amie1000",5l,9));
+    }
+
+    @Test
+    public void addGrade_invalid_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+
+        Laboratory newLab = new Laboratory(2,"1/1/2019",2,"mrie1000");
+        laboratoryController.saveLaboratory(newLab);
+
+        assertFalse(laboratoryController.addGrade("mrie1000",2l,-2));
+    }
+
+    @Test
+    public void saveLaboratory_valid_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+        Laboratory testLab = new Laboratory(4,"01/01/2019",4,"alie1000");
+        assertTrue(laboratoryController.saveLaboratory(testLab));
+    }
+
+    @Test
+    public void saveLaboratory_invalid_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+        Laboratory testLab = new Laboratory(1,"01/01/2019",-2,"arie1000");
+        assertFalse(laboratoryController.saveLaboratory(testLab));
+    }
+
+    @Test
+    public void saveLaboratory_unique_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+        Laboratory testLab = new Laboratory(1,"01/01/2019",2,"nnie1000");
+        assertTrue(laboratoryController.saveLaboratory(testLab));
+    }
+
+    @Test
+    public void saveLaboratory_notUnique_WBT() throws Exception {
+        File f = new File("LaboratoryControllerTestFile.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFile.txt")
+        );
+        Laboratory testLab = new Laboratory(1,"01/01/2019",2,"abie1000");
+        assertTrue(laboratoryController.saveLaboratory(testLab));
+        assertFalse(laboratoryController.saveLaboratory(testLab));
     }
 }

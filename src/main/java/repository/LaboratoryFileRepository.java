@@ -128,7 +128,7 @@ public class LaboratoryFileRepository implements Repository<Long, Laboratory> {
         boolean found = false;
 
         for (Object l : findAll()){
-            if (((Laboratory) l).getStudentRegNumber() == laboratory.getStudentRegNumber())
+            if (((Laboratory) l).getStudentRegNumber().equals(laboratory.getStudentRegNumber()))
                 return true;
         }
 
