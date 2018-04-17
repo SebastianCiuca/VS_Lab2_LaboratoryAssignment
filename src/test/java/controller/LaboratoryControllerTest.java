@@ -1,6 +1,7 @@
 package controller;
 
 import domain.Laboratory;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import repository.LaboratoryFileRepository;
@@ -17,8 +18,42 @@ import static junit.framework.TestCase.assertTrue;
 public class LaboratoryControllerTest {
 
     @BeforeClass
-    public static void setup() throws FileNotFoundException {
+    public static void setup() throws IOException, ParseException {
         File f = new File("LaboratoryControllerTestFile.txt");
+        File f2 = new File("LaboratoryControllerTestFilePassedStudentsEmpty.txt");
+        File f3 = new File("LaboratoryControllerTestFilePassedStudents.txt");
+        File f4 = new File("LaboratoryControllerIntegration.txt");
+        File f5 = new File("StudentControllerIntegration.txt");
+
+        PrintWriter pw = new PrintWriter(f.getName());
+        PrintWriter pw2 = new PrintWriter(f2.getName());
+        PrintWriter pw3 = new PrintWriter(f3.getName());
+        PrintWriter pw4 = new PrintWriter(f4.getName());
+        PrintWriter pw5 = new PrintWriter(f5.getName());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerTestFilePassedStudents.txt")
+        );
+        Laboratory testLab = new Laboratory(1,"01/01/2019",2,"abcd1000");
+        Laboratory testLab2 = new Laboratory(1,"01/01/2019",2,"abce1000");
+        Laboratory testLab3 = new Laboratory(1,"01/01/2019",2,"abcg1000");
+        Laboratory testLab4 = new Laboratory(1,"01/01/2019",2,"abcf1000");
+
+        laboratoryController.saveLaboratory(testLab);
+        laboratoryController.addGrade("abcd1000",1l,9);
+        laboratoryController.saveLaboratory(testLab2);
+        laboratoryController.addGrade("abce1000",1l,8);
+        laboratoryController.saveLaboratory(testLab4);
+        laboratoryController.addGrade("abcf1000",1l,9);
+        laboratoryController.saveLaboratory(testLab3);
+        laboratoryController.addGrade("abcg1000",1l,2);
+
+    }
+
+    @AfterClass
+    public static void after() throws IOException, ParseException {
+        File f = new File("LaboratoryControllerIntegration.txt");
+
         PrintWriter pw = new PrintWriter(f.getName());
     }
 
@@ -70,21 +105,6 @@ public class LaboratoryControllerTest {
         assertFalse(laboratoryController.saveLaboratory(testLab));
     }
 
-    @Test
-    public void passedStudents() throws IOException, ParseException {
-        File f = new File("LaboratoryControllerTestFilePassedStudents.txt");
-        assertTrue(f.exists());
-
-        File f2 = new File("StudentControllerTestFilePassedStudents.txt");
-        assertTrue(f.exists());
-
-        LaboratoryController laboratoryController = new LaboratoryController(
-                new LaboratoryFileRepository(f.getName())
-        );
-
-        assertTrue(!laboratoryController.passedStudents(f2.getName()).isEmpty());
-        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 3);
-    }
 
     /*
         White box tests
@@ -183,4 +203,93 @@ public class LaboratoryControllerTest {
         assertTrue(laboratoryController.saveLaboratory(testLab));
         assertFalse(laboratoryController.saveLaboratory(testLab));
     }
+
+    @Test
+    public void passedStudents_empty_WBT() throws Exception{
+        File f = new File("LaboratoryControllerTestFilePassedStudentsEmpty.txt");
+        assertTrue(f.exists());
+
+        File f2 = new File("StudentControllerTestFilePassedStudents.txt");
+        assertTrue(f2.exists());
+
+        PrintWriter pw = new PrintWriter(f.getName());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository(f.getName())
+        );
+
+        assertTrue(laboratoryController.passedStudents(f2.getName()).isEmpty());
+    }
+
+    @Test
+    public void passedStudents_content_WBT() throws Exception{
+        File f = new File("LaboratoryControllerTestFilePassedStudents.txt");
+        assertTrue(f.exists());
+
+        File f2 = new File("StudentControllerTestFilePassedStudents.txt");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository(f.getName())
+        );
+
+        assertTrue(!laboratoryController.passedStudents(f2.getName()).isEmpty());
+        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 3);
+    }
+
+    /*
+        Integration
+     */
+
+    @Test
+    public void saveLaboratory_integration() throws Exception {
+        File f = new File("LaboratoryControllerIntegration");
+        assertTrue(f.exists());
+        PrintWriter pw = new PrintWriter(f.getName());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerIntegration")
+        );
+
+        Laboratory testLab = new Laboratory(5,"01/01/2019",2,"abcx1000");
+        assertTrue(laboratoryController.saveLaboratory(testLab));
+    }
+
+    @Test
+    public void addGrade_integration() throws Exception {
+        File f = new File("LaboratoryControllerIntegration");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository("LaboratoryControllerIntegration")
+        );
+
+        assertTrue(laboratoryController.addGrade("abcx1000",5l,9));
+    }
+
+    @Test
+    public void passedStudents_integration() throws Exception{
+        File f = new File("LaboratoryControllerIntegration");
+        assertTrue(f.exists());
+
+        File f2 = new File("StudentControllerIntegration");
+        assertTrue(f.exists());
+
+        LaboratoryController laboratoryController = new LaboratoryController(
+                new LaboratoryFileRepository(f.getName())
+        );
+        assertTrue(!laboratoryController.passedStudents(f2.getName()).isEmpty());
+        assertTrue(laboratoryController.passedStudents(f2.getName()).size() == 1);
+
+    }
+
+    @Test
+    public void integration() throws Exception{
+        StudentControllerTest studentControllerTest = new StudentControllerTest();
+        studentControllerTest.saveStudent_integration();
+        saveLaboratory_integration();
+        addGrade_integration();
+        passedStudents_integration();
+    }
+
 }

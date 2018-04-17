@@ -7,7 +7,9 @@ import org.junit.Test;
 import repository.StudentFileRepository;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 
 import static junit.framework.TestCase.assertTrue;
@@ -16,13 +18,17 @@ import static org.junit.Assert.*;
 public class StudentControllerTest {
 
     @Before
-    public void setup(){
-
+    public void setup() throws FileNotFoundException {
+        File f = new File("StudentControllerIntegration");
+        assertTrue(f.exists());
+        PrintWriter pw = new PrintWriter(f.getName());
     }
 
     @After
-    public void teardown(){
-
+    public void teardown() throws FileNotFoundException {
+        File f = new File("StudentControllerIntegration");
+        assertTrue(f.exists());
+        PrintWriter pw = new PrintWriter(f.getName());
     }
 
     @Test
@@ -55,6 +61,20 @@ public class StudentControllerTest {
         assertFalse(studentController.saveStudent(invalidS4));
         assertFalse(studentController.saveStudent(invalidS5));
         assertFalse(studentController.saveStudent(invalidS6));
+    }
+
+    @Test
+    public void saveStudent_integration() throws Exception{
+        Student validS1 = new Student("abcx1000","Brie Wanaschow",933);
+
+        File f = new File("StudentControllerIntegration");
+        assertTrue(f.exists());
+
+        StudentController studentController = new StudentController(
+                new StudentFileRepository(f.getName())
+        );
+
+        assertTrue(studentController.saveStudent(validS1));
     }
 
 }
