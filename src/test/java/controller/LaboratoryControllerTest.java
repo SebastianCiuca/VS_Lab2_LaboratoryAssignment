@@ -292,4 +292,32 @@ public class LaboratoryControllerTest {
         passedStudents_integration();
     }
 
+    /*
+        Incremental testing.
+     */
+
+    @Test
+    public void integration_B() throws Exception{
+        StudentControllerTest studentControllerTest = new StudentControllerTest();
+        studentControllerTest.saveStudent();
+
+        addGrade_integration();
+    }
+
+    @Test
+    public void integration_C() throws Exception{
+        addGrade_integration();
+        passedStudents_integration();
+    }
+
+    @Test
+    public void integration_topDown() throws Exception{
+        //test functionality A
+        StudentControllerTest studentControllerTest = new StudentControllerTest();
+        studentControllerTest.saveStudent();
+
+        integration_B();
+        integration_C();
+    }
+
 }
